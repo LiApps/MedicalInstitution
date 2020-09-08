@@ -7,6 +7,8 @@ namespace MedicalInstitution
 	/*
 	 * Specification with low coupling, because I used a lot primitive types instead classes,
 	 * therefore it is easy to use the component without knowing of special model classes and implementation.
+	 * 
+	 * In specifications and implementations check coupling and cohesion by formulas!
 	 */
 	interface IObservationController
 	{
