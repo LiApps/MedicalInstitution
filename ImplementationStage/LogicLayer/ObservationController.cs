@@ -9,6 +9,8 @@ namespace MedicalInstitution
 	 * To work with observations of both data types(quality and quantity) it was created
 	 * abstract Observation class and its specialized leaf classes Measurement and CategoryObservation.
 	 * 
+	 * Use object composition to bring functionaluty together + modularity element of object model.
+	 * 
 	 * Interface is essential! Any component that can be used by client or programmers that working simultaneously
 	 * and depend on each other should be written with specifications that, also, can be used as test cases.
 	 */
