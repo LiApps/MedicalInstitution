@@ -1,6 +1,7 @@
 ﻿using MedicalInstitution.DatabaseLayer;
 using Microsoft.Data.SqlClient;
 using System;
+using System.Data;
 
 namespace MedicalInstitution
 {
@@ -17,16 +18,17 @@ namespace MedicalInstitution
 			Pollen = 64,
 			Cats = 128
 		}
+		static void Main(string[] args) {
+			var medicalInstitutionController = new MedicalInstitutionController();
+			
+			medicalInstitutionController.AddTestData();
 
-		static void Main(string[] args)
-		{
-			//CreatePatient();
-			//FindPatientByFullName();
-			//FindFormByType();
-			//using (var connection = new SqlConnection(dbConnectionString))
+			var userInputAllergies = medicalInstitutionController.GetUserAllergiesInput();
+			medicalInstitutionController.AddAllergies(userInputAllergies);
 
-			string queryString = "SELECT Id FROM dbo.MedicalInstitution;";
-			DatabaseConnection.ExecuteNonQueryCommand(queryString);
+			var userInput = medicalInstitutionController.GetUserSearchInput();
+			medicalInstitutionController.FindObservationByUserInput(userInput);
+
 
 		}
 	}

@@ -6,6 +6,8 @@ namespace MedicalInstitution
 {
 	abstract class Observation
 	{
-		private Guid Id;
+		private Guid id;
+		private Guid formId;
+		private Guid measurementId;
 	}
 }

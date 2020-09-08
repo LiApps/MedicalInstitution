@@ -3,18 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MedicalInstitution.Models
+namespace MedicalInstitution.Models.Observation
 {
-	class Employer
+	class Patient
 	{
 		private Guid id;
 		private string fullName;
 
-		public Employer(string fullName) {
+		public Patient(string fullName) {
 			this.fullName = fullName;
 		}
 		internal Guid Add() {
-			string queryString = @"INSERT INTO dbo.Employer(FullName) OUTPUT INSERTED.ID VALUES (" + this.fullName + ")";
+			string queryString = @"INSERT INTO dbo.Patient(FullName) OUTPUT INSERTED.ID VALUES (" + this.fullName + ")";
 			return DatabaseConnection.ModifyRecords(queryString);
 		}
 	}

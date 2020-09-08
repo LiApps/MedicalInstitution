@@ -6,5 +6,7 @@ namespace MedicalInstitution
 {
 	class ObservationResult
 	{
+		private bool Succes;
+		private string Comment;
 	}
 }

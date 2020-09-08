@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MedicalInstitution.DatabaseLayer;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,60 +8,62 @@ namespace MedicalInstitution
 	class ObservationController : IObservationController
 	{
 		#region private
-		private Guid CreateMeasurement(Guid phenomenonTypeId, Guid unitId, double quantity) {
-			var quantityObservation = new Quantity(unitId, quantity);
-			var quantityId = quantityObservation.CreateQuantity(quantityObservation);
-			var measurement = new Measurement(phenomenonTypeId, quantityId);
-			return measurement.Create(measurement);
+		private string GetObservationSelectQueryText(bool isMeasurement) {
+			var tableName = isMeasurement ? ObservationConstants.MeasurementTableName : ObservationConstants.CategoryObservationTableName;
+			return "SELECT Id FROM dbo." + tableName;
 		}
-		private Guid CreateCategoryObservation(Guid phenomenonTypeId, string categoryValue)
-		{
-			var categoryObservation = new CategoryObservation(phenomenonTypeId, categoryValue);
-			return categoryObservation.Create(categoryObservation);
-		}
-		private Guid AddObservationToForm(Guid formId, Guid phenomenonTypeId, Guid categoryObservationId)
-		{
-			throw new NotImplementedException();
+
+		private string GetObservationSelectQueryText(Guid formId, bool isMeasurement, Guid phenomenonTypeId, string observationValue) {
+			var querySelectPart = GetObservationSelectQueryText(isMeasurement);
+			var queryConditionPart = " WHERE FormId =" + formId + " AND ObservationValue =" + observationValue;
+
+			return querySelectPart + " " + queryConditionPart + "; ";
 		}
 		#endregion
 
 		#region public
-		public void CreateObservationForm(Guid clinicianId, Guid patientId, Guid protocolId, Guid observationFormTypeId)
-		{
+		public void CreateObservationForm(Guid clinicianId, Guid patientId, Guid protocolId, Guid observationFormTypeId) {
 			var form = new ObservationForm(clinicianId, patientId, protocolId, observationFormTypeId);
-			form.Create(form);
+			form.Add();
 		}
-		public Guid AddQualitativeObservationToForm(Guid formId, Guid phenomenonTypeId, string measurementValue)
-		{
-			var categoryObservationId = CreateCategoryObservation(phenomenonTypeId, measurementValue);
-			return AddObservationToForm(formId, phenomenonTypeId, categoryObservationId);
-		}
-
-		public Guid AddQuantitativeObservationToForm(Guid formId, Guid phenomenonTypeId, Guid unitId, double measurementValue)
-		{
-			var measurementId = CreateMeasurement(phenomenonTypeId, unitId, measurementValue);
-			return AddObservationToForm(formId, phenomenonTypeId, measurementId);
-		}
-		public Guid FindFormObservation(Guid formId, Guid phenomenonTypeId, string observationValue)
-		{
-			return Guid.Empty;
-		}
-		public void UpdateFormObservation(Guid formId, Guid phenomenonTypeId, Guid observationId, Observation observation)
-		{
-			
+		public Guid AddQualitativeObservationToForm(Guid formId, Guid phenomenonTypeId, string observationValue) {
+			var categoryObservation = new CategoryObservation(phenomenonTypeId, observationValue);
+			return categoryObservation.Create();
 		}
 
-		public void UpdateObservationForm(Guid formId, string fieldName, string value)
-		{
-			
+		public Guid AddQuantitativeObservationToForm(Guid formId, Guid phenomenonTypeId, Guid unitId, double observationValue) {
+			var quantityObservation = new Quantity(unitId, observationValue);
+			var quantityId = quantityObservation.Add();
+			var measurement = new Measurement(formId, phenomenonTypeId, quantityId);
+			return measurement.Add();
 		}
-		public void DeleteFormObservation(Guid formId, Guid phenomenonTypeId, Guid observationId)
-		{
-			
+		public List<Guid> FindFormObservation(Guid formId, Guid phenomenonTypeId, string observationValue, bool isMeasurement) {
+			var fullQueryText = GetObservationSelectQueryText(formId, isMeasurement, phenomenonTypeId, observationValue);
+			var observationList = new List<Guid>();
+
+			using (var connection = DatabaseConnection.GetNewSqlConnection()) {
+				var reader = DatabaseConnection.GetRecords(connection, fullQueryText);
+				while (reader.Read()) {
+					observationList.Add(Guid.Parse(reader["Id"].ToString()));
+				}
+			}
+
+			return observationList;
 		}
 
-		public void DeleteObservationForm()
-		{
+		public bool UpdateFormObservation(Guid formId, Guid phenomenonTypeId, Guid observationId, Observation observation) {
+			return false;	
+		}
+
+		public bool UpdateObservationForm(Guid formId, string fieldName, string value) {
+			return false;
+		}
+		public bool DeleteFormObservation(Guid formId, Guid phenomenonTypeId, Guid observationId) {
+			return false;
+		}
+
+		public bool DeleteObservationForm() {
+			return false;
 		}
 
 		#endregion

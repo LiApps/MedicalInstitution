@@ -7,20 +7,21 @@ namespace MedicalInstitution
 {
 	class Quantity
 	{
+		#region private variables
 		private Guid unitId;
 		private double quantity;
+		#endregion
 
-		public Quantity(Guid unitId, double quantity)
-		{
+		#region public methods
+		public Quantity(Guid unitId, double quantity) {
 			this.unitId = unitId;
 			this.quantity = quantity;
 		}
 
-		internal Guid CreateQuantity(Quantity quantity)
-		{
-			string queryString = "INSERT " + quantity.unitId + "," + quantity.quantity + "," + "Id INTO dbo.Quantity;";
-			var quantityId = DatabaseConnection.ExecuteNonQueryCommand(queryString);
-			return quantityId;
+		internal Guid Add() {
+			string queryString = @"INSERT INTO dbo.Quantity(Quantity) OUTPUT INSERTED.ID VALUES (" + this.quantity + ")";
+			return DatabaseConnection.ModifyRecords(queryString);
 		}
+		#endregion
 	}
 }
