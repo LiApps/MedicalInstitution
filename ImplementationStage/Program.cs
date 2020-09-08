@@ -1,4 +1,8 @@
-﻿using MedicalInstitution.DatabaseLayer;
+﻿/*
+ * Ususally do not write comments, but document classes...
+ * Added comments to say about extensions.
+ */
+using MedicalInstitution.DatabaseLayer;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Data;
@@ -19,6 +23,9 @@ namespace MedicalInstitution
 			Cats = 128
 		}
 		static void Main(string[] args) {
+			//added class MedicalInstitutionController to process cases with enum Allergen.
+			//Without enum it is possible to use ObservationController component
+			//in real accounting of medical instit. data
 			var medicalInstitutionController = new MedicalInstitutionController();
 			
 			medicalInstitutionController.AddTestData();

@@ -1,16 +1,23 @@
-﻿using MedicalInstitution.DatabaseLayer;
+﻿using System;
+using static MedicalInstitution.Program;
+
+using MedicalInstitution.DatabaseLayer;
 using MedicalInstitution.Models;
 using MedicalInstitution.Models.Observation;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using static MedicalInstitution.Program;
 
 namespace MedicalInstitution
 {
+	/*
+	 * Class without important logic or functions for accounting otherwise ObservationController. 
+	 * I would decompose it more and define specifications.
+	 */
 	class MedicalInstitutionController
 	{
 		#region private
+		/*
+		 * According to my ER diagram to add observation form it is needed to add 
+		 * doctor(it is a table Employer, but if extend realization Employer can have subtype Doctor or bool sign...)
+		 */
 		private Guid AddFormData() {
 			var employer = new Employer("Katrin Johnson");
 			var employerId = employer.Add();
@@ -26,7 +33,11 @@ namespace MedicalInstitution
 
 			return observationFormId;
 		}
-
+		/*
+		 * new Quantity - it is initialization, not adding or creating an object in DB,
+		 * therefore each model has own method for adding records to db.
+		 * Can be divided on two methods CreateQuantity and CreateMeasurement for example.
+		 */
 		private Guid AddObservationToForm(Guid formId, Guid phenomenonTypeId, double quantityValue) {
 			var quantity = new Quantity(Guid.Empty, quantityValue);
 			var quantityId = quantity.Add();
@@ -38,6 +49,7 @@ namespace MedicalInstitution
 			var phenomenonType = new PhenomenonType(name, description);
 			return phenomenonType.Add();
 		}
+
 		private void AddAllergy(string allergy) {
 			var observationName = string.Empty;
 
@@ -96,6 +108,10 @@ namespace MedicalInstitution
 			}
 		}
 
+		/*
+		 * Here can be added parsing checking.
+		 * Cycle while can be extracted.
+		 */
 		private Guid ReadPhenomenonType(string fullQueryText) {
 			using (var connection = DatabaseConnection.GetNewSqlConnection()) {
 				var reader = DatabaseConnection.GetRecords(connection, fullQueryText);
@@ -119,6 +135,7 @@ namespace MedicalInstitution
 			AddObservationToForm(formId, phenomenonTypeIdPollenAllergy, 64);
 			AddObservationToForm(formId, phenomenonTypeIdCatsAllergy, 128);
 		}
+
 		public string GetUserSearchInput() {
 			Console.WriteLine("Please, write down patient`s space-separated allergen name or score you would like to find");
 			var allergens = Console.ReadLine();

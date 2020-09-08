@@ -4,6 +4,9 @@ using System.Text;
 
 namespace MedicalInstitution
 {
+	/*
+	 * As I remember "readonly". Can replace if somehow will extend the component =).
+	 */
 	class ObservationConstants
 	{
 		public static readonly string MeasurementTableName = "Measurement";

@@ -5,6 +5,13 @@ using System.Text;
 
 namespace MedicalInstitution
 {
+	/*
+	 * To work with observations of both data types(quality and quantity) it was created
+	 * abstract Observation class and its specialized leaf classes Measurement and CategoryObservation.
+	 * 
+	 * Interface is essential! Any component that can be used by client or programmers that working simultaneously
+	 * and depend on each other should be written with specifications that, also, can be used as test cases.
+	 */
 	class ObservationController : IObservationController
 	{
 		#region private
@@ -37,6 +44,11 @@ namespace MedicalInstitution
 			var measurement = new Measurement(formId, phenomenonTypeId, quantityId);
 			return measurement.Add();
 		}
+
+		/*
+		 * "using" can be extracted.
+		 * And I dislike to write column names as string value.
+		 */
 		public List<Guid> FindFormObservation(Guid formId, Guid phenomenonTypeId, string observationValue, bool isMeasurement) {
 			var fullQueryText = GetObservationSelectQueryText(formId, isMeasurement, phenomenonTypeId, observationValue);
 			var observationList = new List<Guid>();
@@ -51,6 +63,9 @@ namespace MedicalInstitution
 			return observationList;
 		}
 
+		/*
+		 * Can be realized for real medical clinic.
+		 */
 		public bool UpdateFormObservation(Guid formId, Guid phenomenonTypeId, Guid observationId, Observation observation) {
 			return false;	
 		}
